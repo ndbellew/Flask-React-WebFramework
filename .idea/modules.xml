@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/Flask-React-WebFramework.iml" filepath="$PROJECT_DIR$/.idea/Flask-React-WebFramework.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/methane-website.iml" filepath="$PROJECT_DIR$/.idea/methane-website.iml" />
     </modules>
   </component>
 </project>

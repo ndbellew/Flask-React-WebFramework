@@ -1,10 +1,12 @@
 
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css'
 import logo from "../../integritylogo.webp";
+import { AuthContext } from '../../AuthContext';
 
 const NavBar = () => {
+  const { isAuthenticated, isAdmin } = useContext(AuthContext);
 return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
       <div className="container-fluid">
@@ -20,6 +22,16 @@ return (
             <li className="nav-item">
               <Link className="nav-link" to="/">Home</Link>
             </li>
+            {!isAuthenticated && (
+            <li className="nav-item">
+              <Link className="nav-link" to="/Login">Login</Link>
+            </li>
+            )}
+            {isAuthenticated && isAdmin && (
+            <li className="nav-item">
+              <Link className="nav-link" to="/admin/dashboard">Admin Dashboard</Link>
+            </li>
+            )}
             <li className="nav-item">
               <Link className="nav-link" to="/AboutUs">About Us</Link>
             </li>

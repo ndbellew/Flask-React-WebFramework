@@ -167,19 +167,22 @@ npm-debug.log
 yarn-error.log
 
 # Dependencies
-frontend/node_modules
+
 
 # Testing
-frontend/coverage
+coverage
 
 # Production
-frontend/build
+build
 
 # Misc
-frontend/.DS_Store
-frontend/*.pem
-frontend/*.log
+.DS_Store
+*.pem
+
 
 # Logs
 logs/
 backend/logs/
+
+# Super Secrett Configs
+api/config.py

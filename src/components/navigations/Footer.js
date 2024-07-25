@@ -10,7 +10,7 @@ const Footer = () => {
               display: "inline-block"
           }}>
               <img src={logo} alt="logo" width={25} height={25}/>
-              © 2024 Integrity Communications Solutions
+              © 2024 GNU Software License
           </p>
 
       </footer>
