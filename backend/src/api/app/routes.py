@@ -1,58 +1,77 @@
 from time import time
 
-from flask import request, jsonify
+from flask import Blueprint, jsonify, request
 from flask_jwt_extended import (
-    create_access_token,  jwt_required, get_jwt_identity, create_refresh_token,
-    jwt_required
+    create_access_token,
+    create_refresh_token,
+    get_jwt_identity,
+    jwt_required,
 )
 from flask_wtf.csrf import generate_csrf
 
-from api.app import app as api, users, csrf
+from api.extensions import csrf, db
+from api.models import User
+
+api_bp = Blueprint("api", __name__)
 
 
-@api.route('/')
-@api.route('/index')
+@api_bp.route('/')
+@api_bp.route('/index')
 def index():
     return "Hello World"
 
-@api.route('/refresh', methods=['POST'])
+@api_bp.route('/refresh', methods=['POST'])
 @jwt_required(refresh=True)
 def refresh():
     current_user = get_jwt_identity()
     access_token = create_access_token(identity=current_user)
     return jsonify(access_token=access_token)
 
-@api.route('/time')
+@api_bp.route('/time')
 def get_current_time():
     return {'time': time()}
 
 
-@api.route('/login', methods=['POST'])
+@api_bp.post("/login")
 def login():
-    data = request.get_json()
-    email = data.get('email')
-    password = data.get('password')
+    data = request.get_json(silent=True) or {}
 
-    if email in users and users[email]['password'] == password:
-        access_token = create_access_token(identity={'email': email, 'role': users[email]['role']})
-        refresh_token = create_refresh_token(identity={'email': email, 'role': users[email]['role']})
-        return jsonify(
-            access_token=access_token,
-            refresh_token=refresh_token,
-            role=users[email]['role']
-        ), 200
+    email = str(data.get("email", "")).strip().lower()
+    password = data.get("password", "")
 
-    elif not email or not password:
+    if not email or not password:
         return jsonify(
-            {'error': 'Please provide both email and password at the same time!'}
+            error="Email and password are required",
         ), 400
-    else:
+
+    user = db.session.execute(
+        db.select(User).where(User.email == email)
+    ).scalar_one_or_none()
+
+    if user is None or not user.check_password(password):
         return jsonify(
-            {"error": "Bad email or password"}
+            error="Invalid email or password",
         ), 401
 
+    claims = {"role": user.role}
 
-@api.route('/protected', methods=['GET'])
+    access_token = create_access_token(
+        identity=str(user.id),
+        additional_claims=claims,
+    )
+    refresh_token = create_refresh_token(
+        identity=str(user.id),
+        additional_claims=claims,
+    )
+
+    return jsonify(
+        access_token=access_token,
+        refresh_token=refresh_token,
+        role=user.role,
+    ), 200
+
+
+@api_bp.get('/protected')
 @jwt_required()
 def protected():
     current_user = get_jwt_identity()
@@ -61,7 +80,7 @@ def protected():
     )
 
 
-@api.route('/get-csrf-token', methods=['GET'])
+@api_bp.get('/get-csrf-token')
 def get_csrf_token():
     token = generate_csrf()
     return jsonify(
@@ -69,7 +88,7 @@ def get_csrf_token():
     )
 
 @csrf.exempt
-@api.route('/validate-token', methods=['POST'])
+@api_bp.post('/validate-token')
 @jwt_required()
 def validate_token():
     identity = get_jwt_identity()

@@ -1,23 +1,21 @@
 from flask import Flask
-from flask_jwt_extended import JWTManager
-from flask_wtf.csrf import CSRFProtect
 
 from api.config import Config
+from api.extensions import csrf, db, jwt, migrate
 
-app = Flask(__name__)
-app.config.from_object(Config)
-csrf = CSRFProtect(app)
-jwt = JWTManager(app)
 
-users = {
-    'test@user.com': {
-        'password': 'testpassword',
-        'role': 'user'
-    },
-    'admin@admin.com': {
-        'password': '<PASSWORD>',
-        'role': 'admin'
-    }
-}
+def create_app(config_class=Config) -> Flask:
+    app = Flask(__name__)
+    app.config.from_object(config_class)
 
-from api.app import routes
+    db.init_app(app)
+    migrate.init_app(app, db)
+    csrf.init_app(app)
+    jwt.init_app(app)
+
+    from api import models  # noqa: F401
+    from api.app.routes import api_bp
+
+    app.register_blueprint(api_bp)
+
+    return app
