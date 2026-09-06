@@ -1,6 +1,6 @@
 // src/components/navigations/Footer.js
 import React from 'react';
-import logo from "../../integritylogo.webp";
+import logo from "../../logo.svg";
 
 
 const Footer = () => {

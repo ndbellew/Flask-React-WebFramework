@@ -2,7 +2,7 @@
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css'
-import logo from "../../integritylogo.webp";
+import logo from "../../logo.svg";
 import { AuthContext } from '../../AuthContext';
 
 const NavBar = () => {
@@ -12,7 +12,7 @@ return (
       <div className="container-fluid">
         <Link className="navbar-brand" to="/">
           <img src={logo} alt={"Logo"} width={"45"} height={"45"} className={"d-inline-block align-top"} />
-          Applicationn Web Template
+          Application Web Template
         </Link>
         <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
           <span className="navbar-toggler-icon"></span>

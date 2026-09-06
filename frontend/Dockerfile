@@ -8,9 +8,10 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
 
+COPY index.html ./index.html
 COPY public ./public
 COPY src ./src
 
 EXPOSE 3000
 
-CMD ["npm", "start"]
+CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
