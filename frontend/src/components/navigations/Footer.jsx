@@ -1,5 +1,4 @@
 // src/components/navigations/Footer.js
-import React from 'react';
 import logo from "../../logo.svg";
 
 

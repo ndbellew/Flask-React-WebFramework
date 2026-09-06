@@ -1,5 +1,5 @@
-import React, { createContext, useState, useEffect } from 'react';
 import { fetchWithTokenRefresh } from './utils/utils';
+import {createContext, useEffect, useState} from "react";
 
 // Create the AuthContext
 export const AuthContext = createContext();

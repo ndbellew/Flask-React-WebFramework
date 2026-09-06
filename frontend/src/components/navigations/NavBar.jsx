@@ -1,9 +1,8 @@
-
-import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css'
 import logo from "../../logo.svg";
 import { AuthContext } from '../../AuthContext';
+import {useContext} from "react";
 
 const NavBar = () => {
   const { isAuthenticated, isAdmin } = useContext(AuthContext);

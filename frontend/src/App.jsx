@@ -1,5 +1,4 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import React, { useEffect, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 
 import AboutUs from "./components/pages/AboutUs";
@@ -11,6 +10,7 @@ import ProtectedRoutes from "./components/ProtectedRoutes";
 import Layout from "./layout/Layout";
 import { fetchWithTokenRefresh } from "./utils/utils";
 import "./App.css";
+import {useState, useEffect} from "react";
 
 function App() {
   const [currentTime, setCurrentTime] = useState("Time since Epoch!");
