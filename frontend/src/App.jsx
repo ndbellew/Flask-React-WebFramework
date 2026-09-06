@@ -1,6 +1,5 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Route, Routes } from "react-router-dom";
-
 import AboutUs from "./components/pages/AboutUs";
 import AdminDashboard from "./components/pages/AdminDashboard";
 import ContactUs from "./components/pages/ContactUs";
