@@ -1,9 +1,9 @@
 import pytest
 
 from api.app import create_app
+from api.config import Config
 from api.extensions import db
 from api.models import User
-from api.config import Config
 
 
 class TestConfig(Config):
