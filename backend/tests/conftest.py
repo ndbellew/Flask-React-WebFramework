@@ -9,9 +9,8 @@ from api.models import User
 class TestConfig(Config):
     TESTING = True
     SQLALCHEMY_DATABASE_URI = "sqlite+pysqlite:///:memory:"
-    CORS_ORIGINS = ["http://localhost:5173"]
+    CORS_ORIGINS = ("http://localhost:5173",)
     WTF_CSRF_ENABLED = False
-
 
 @pytest.fixture()
 def app():
