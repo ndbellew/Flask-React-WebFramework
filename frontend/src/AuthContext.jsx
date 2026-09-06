@@ -13,7 +13,7 @@ export const AuthProvider = ({ children }) => {
     const validateToken = async () => {
       const token = localStorage.getItem('token');
       if (token) {
-        const response = await fetchWithTokenRefresh('/validate-token', {
+        const response = await fetchWithTokenRefresh('/auth/me', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

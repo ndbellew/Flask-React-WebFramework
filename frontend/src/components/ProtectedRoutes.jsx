@@ -1,12 +1,18 @@
 
 import { Navigate } from 'react-router-dom';
 
-const ProtectedRoute = ({ element: Component, isAuthenticated, isAdmin, ...rest }) => {
+const ProtectedRoute = ({
+  element: Component,
+  isAuthenticated,
+  isAdmin,
+  requireAdmin = false,
+  ...rest
+}) => {
   if (!isAuthenticated) {
     return <Navigate to="/login" />;
   }
 
-  if (isAdmin && !isAdmin) {
+  if (requireAdmin && !isAdmin) {
     return <Navigate to="/unauthorized" />;
   }
 

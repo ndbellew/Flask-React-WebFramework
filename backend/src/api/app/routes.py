@@ -4,6 +4,7 @@ from flask import Blueprint, jsonify, request
 from flask_jwt_extended import (
     create_access_token,
     create_refresh_token,
+    get_jwt,
     get_jwt_identity,
     jwt_required,
 )
@@ -87,8 +88,14 @@ def get_csrf_token():
 
 
 @csrf.exempt
-@api_bp.post("/validate-token")
+@api_bp.post("/auth/me")
 @jwt_required()
 def validate_token():
     identity = get_jwt_identity()
-    return jsonify(isValid=True, role=identity["role"])
+    claims = get_jwt()
+
+    return jsonify(
+        isValid=True,
+        user_id=identity,
+        role=claims["role"],
+    )

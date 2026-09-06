@@ -22,6 +22,7 @@ const Login = ({ csrfToken }) => {
       const data = await response.json();
       if (response.ok) {
         localStorage.setItem('token', data.access_token);
+        localStorage.setItem('refresh_token', data.refresh_token);
         alert('Login successful!');
         if (data.role === 'admin'){
           navigate('/admin/dashboard');

@@ -41,7 +41,7 @@ function App() {
     const token = localStorage.getItem("token");
 
     if (token) {
-      fetchWithTokenRefresh("/validate-token", {
+      fetchWithTokenRefresh("/auth/me", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -93,6 +93,7 @@ function App() {
               <ProtectedRoutes
                 isAuthenticated={isAuthenticated}
                 isAdmin={isAdmin}
+                requireAdmin
                 element={AdminDashboard}
               />
             }
