@@ -3,18 +3,13 @@ import pytest
 from api.app import create_app
 from api.extensions import db
 from api.models import User
+from api.config import Config
 
 
-class TestConfig:
+class TestConfig(Config):
     TESTING = True
-
-    SECRET_KEY = "test-secret-key-at-least-32-bytes"
-    JWT_SECRET_KEY = "test-jwt-secret-at-least-32-bytes"
-
-    SQLALCHEMY_DATABASE_URI = "sqlite://"
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
-
-    # API tests shouldn't need to negotiate browser CSRF tokens.
+    SQLALCHEMY_DATABASE_URI = "sqlite+pysqlite:///:memory:"
+    CORS_ORIGINS = ["http://localhost:5173"]
     WTF_CSRF_ENABLED = False
 
 
