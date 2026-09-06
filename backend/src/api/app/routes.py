@@ -15,21 +15,23 @@ from api.models import User
 api_bp = Blueprint("api", __name__)
 
 
-@api_bp.route('/')
-@api_bp.route('/index')
+@api_bp.route("/")
+@api_bp.route("/index")
 def index():
     return "Hello World"
 
-@api_bp.route('/refresh', methods=['POST'])
+
+@api_bp.route("/refresh", methods=["POST"])
 @jwt_required(refresh=True)
 def refresh():
     current_user = get_jwt_identity()
     access_token = create_access_token(identity=current_user)
     return jsonify(access_token=access_token)
 
-@api_bp.route('/time')
+
+@api_bp.route("/time")
 def get_current_time():
-    return {'time': time()}
+    return {"time": time()}
 
 
 @api_bp.post("/login")
@@ -71,28 +73,22 @@ def login():
     ), 200
 
 
-@api_bp.get('/protected')
+@api_bp.get("/protected")
 @jwt_required()
 def protected():
     current_user = get_jwt_identity()
-    return jsonify(
-        logged_in_as=current_user
-    )
+    return jsonify(logged_in_as=current_user)
 
 
-@api_bp.get('/get-csrf-token')
+@api_bp.get("/get-csrf-token")
 def get_csrf_token():
     token = generate_csrf()
-    return jsonify(
-        csrf_token=token
-    )
+    return jsonify(csrf_token=token)
+
 
 @csrf.exempt
-@api_bp.post('/validate-token')
+@api_bp.post("/validate-token")
 @jwt_required()
 def validate_token():
     identity = get_jwt_identity()
-    return jsonify(
-        isValid=True,
-        role=identity['role']
-    )
+    return jsonify(isValid=True, role=identity["role"])

@@ -3,11 +3,7 @@ from datetime import timedelta
 
 
 def parse_origins(value: str) -> list[str]:
-    return [
-        origin.strip()
-        for origin in value.split(",")
-        if origin.strip()
-    ]
+    return [origin.strip() for origin in value.split(",") if origin.strip()]
 
 
 class Config:
