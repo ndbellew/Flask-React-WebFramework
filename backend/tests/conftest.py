@@ -12,6 +12,7 @@ class TestConfig(Config):
     CORS_ORIGINS = ("http://localhost:5173",)
     WTF_CSRF_ENABLED = False
 
+
 @pytest.fixture()
 def app():
     app = create_app(TestConfig)
