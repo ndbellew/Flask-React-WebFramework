@@ -1,7 +1,7 @@
 from flask import Flask
 
 from api.config import Config
-from api.extensions import csrf, db, jwt, migrate
+from api.extensions import cors, csrf, db, jwt, migrate
 
 
 def create_app(config_class=Config) -> Flask:
@@ -12,6 +12,15 @@ def create_app(config_class=Config) -> Flask:
     migrate.init_app(app, db)
     csrf.init_app(app)
     jwt.init_app(app)
+
+    cors.init_app(
+        app,
+        resources={
+            r"/api/*": {
+                "origins": app.config["CORS_ORIGINS"],
+            }
+        },
+    )
 
     from api import models  # noqa: F401
     from api.app.routes import api_bp

@@ -2,6 +2,14 @@ import os
 from datetime import timedelta
 
 
+def parse_origins(value: str) -> list[str]:
+    return [
+        origin.strip()
+        for origin in value.split(",")
+        if origin.strip()
+    ]
+
+
 class Config:
     SECRET_KEY = os.getenv(
         "SECRET_KEY",
@@ -18,6 +26,13 @@ class Config:
     SQLALCHEMY_DATABASE_URI = os.getenv(
         "DATABASE_URL",
         "sqlite:///app.db",
+    )
+
+    CORS_ORIGINS = parse_origins(
+        os.getenv(
+            "CORS_ORIGINS",
+            "http://localhost:3000",
+        )
     )
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
