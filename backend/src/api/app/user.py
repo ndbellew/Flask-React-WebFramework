@@ -1,6 +1,4 @@
-from typing import Dict
-
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify
 from flask_jwt_extended import (
     create_access_token,
     create_refresh_token,
@@ -8,40 +6,75 @@ from flask_jwt_extended import (
     jwt_required,
 )
 
-from ..extensions import db
-from ..models import User, RevokedToken
-
 from ..decorators.require_json import require_json
-
+from ..extensions import db
+from ..models import RevokedToken, User
 
 user_bp = Blueprint("user", __name__)
 
-@user_bp.route("/me")
+
+@user_bp.get("/me")
 @jwt_required()
 def get_current_user():
     user_id = get_jwt_identity()
-    user = db.session.execute(db.select(User).where(User.id == user_id)).scalar_one_or_none()
-    return jsonify(user)
-
-@user_bp.route("/profile/<str:username>")
-@require_json("username", "user_id")
-def get_profile(data: dict):
-    username = data.get("username")
-    user_id = int(data.get("user_id"))
     user = db.session.execute(
         db.select(User).where(User.id == user_id)
-    )
-    return jsonify(message=f"Profile for user {username}")
+    ).scalar_one_or_none()
+    return jsonify(
+        id=user.id,
+        username=user.username,
+        email=user.email,
+        role=user.role,
+        created_at=user.created_at.isoformat(),
+    ), 200
 
-@user_bp.route("/register")
-def register():
-    return jsonify(message="Registration successful")
+
+@user_bp.get("/profile/<str:username>")
+@jwt_required()
+def get_profile(username: str):
+    user = db.session.execute(
+        db.select(User).where(User.username == username)
+    ).scalar_one_or_none()
+
+    if user is None:
+        return jsonify(error="User not found"), 404
+
+    return jsonify(
+        id=user.id,
+        username=user.username,
+        email=user.email,
+        role=user.role,
+        created_at=user.created_at.isoformat(),
+    ), 200
+
+
+@user_bp.post("/register")
+@require_json("username", "email", "password")
+def register(data: dict):
+    username = str(data["username"]).strip().lower()
+    email = str(data["email"]).strip().lower()
+    password = data["password"]
+
+    user = User().set_register_data(
+        username=username,
+        email=email,
+        password=password,
+    )
+
+    db.session.add(user)
+    db.session.commit()
+
+    return jsonify(
+        message="Registration successful",
+        user_id=user.id,
+        username=user.username,
+    ), 201
+
 
 @user_bp.post("/logout")
-@require_json( "user_id", "jti")
+@require_json("jti")
 @jwt_required()
-def logout(data: Dict[str, str]):
-    user_id: int = int(data.get("user_id"))
+def logout(data: dict[str, str]):
     jti: str = data.get("jti")
 
     revoked_token = RevokedToken(jti=jti)
@@ -50,9 +83,10 @@ def logout(data: Dict[str, str]):
 
     return jsonify(message="Logged out")
 
+
 @user_bp.post("/login")
 @require_json("email", "password")
-def login(data: Dict[str, str]):
+def login(data: dict[str, str]):
 
     email = str(data.get("email", "")).strip().lower()
     password = data.get("password", "")
@@ -88,11 +122,10 @@ def login(data: Dict[str, str]):
         role=user.role,
     ), 200
 
+
 @user_bp.route("/refresh", methods=["POST"])
 @jwt_required(refresh=True)
 def refresh():
     current_user = get_jwt_identity()
     access_token = create_access_token(identity=current_user)
     return jsonify(access_token=access_token)
-
-

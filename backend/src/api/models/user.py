@@ -8,16 +8,21 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from ..extensions import db
 
 
+class Role(Enum):
+    VIEWER = "viewer"
+    USER = "user"
+    ADMIN = "admin"
+
+
 class User(db.Model):
     __tablename__ = "users"
-
     id: Mapped[int] = mapped_column(primary_key=True)
     username: Mapped[str] = mapped_column(
         String(50),
-        unique=False,
+        unique=True,
         index=True,
         nullable=False,
-)
+    )
     email: Mapped[str] = mapped_column(
         String(320),
         unique=True,
@@ -38,13 +43,18 @@ class User(db.Model):
         nullable=False,
     )
 
-    def set_password(self, password: str) -> None:
-        self.password_hash = generate_password_hash(password)
+    def set_register_data(
+        self, username: str, email: str, password: str, role: str = Role.USER.value
+    ):
+        self.username = username
+        self.email = email
+        self.password_hash = self.hash_password(password)
+        self.role = role
+
+        return self
+
+    def hash_password(self, password: str) -> str:
+        return generate_password_hash(password)
 
     def check_password(self, password: str) -> bool:
         return check_password_hash(self.password_hash, password)
-
-class Role(Enum):
-    VIEWER = "viewer"
-    USER = "user"
-    ADMIN = "admin"

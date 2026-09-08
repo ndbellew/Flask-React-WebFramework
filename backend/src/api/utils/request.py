@@ -20,9 +20,7 @@ def require_fields(data, *fields):
 
     if missing:
         return (
-            jsonify(
-                error=f"Missing required fields: {', '.join(missing)}"
-            ),
+            jsonify(error=f"Missing required fields: {', '.join(missing)}"),
             400,
         )
 

@@ -19,8 +19,6 @@ api_bp = Blueprint("api", __name__)
 #     return "Hello World"
 
 
-
-
 @api_bp.route("/time")
 def get_current_time():
     return {"time": time()}
