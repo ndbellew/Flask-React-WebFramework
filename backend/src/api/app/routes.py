@@ -9,11 +9,12 @@ from flask_wtf.csrf import generate_csrf
 
 api_bp = Blueprint("api", __name__)
 
-## Probably Don't Need
-# @api_bp.route("/")
-# @api_bp.route("/index")
-# def index():
-#     return "Hello World"
+
+# Probably Don't Need
+@api_bp.route("/")
+@api_bp.route("/index")
+def index():
+    return "Hello World"
 
 
 @api_bp.route("/time")
