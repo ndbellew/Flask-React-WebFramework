@@ -1,5 +1,5 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Route, Routes } from "react-router-dom";
+import {Navigate, Route, Routes} from "react-router-dom";
 import AboutUs from "./components/pages/AboutUs";
 import AdminDashboard from "./components/pages/AdminDashboard";
 import ContactUs from "./components/pages/ContactUs";
@@ -7,6 +7,8 @@ import Home from "./components/pages/Home";
 import Login from "./components/pages/Login";
 import ProtectedRoutes from "./components/ProtectedRoutes";
 import Layout from "./layout/Layout";
+import Register from "./components/pages/Register";
+import Profile from "./components/pages/Profile";
 import { fetchWithTokenRefresh } from "./utils/utils";
 import "./App.css";
 import {useState, useEffect} from "react";
@@ -85,7 +87,28 @@ function App() {
           <Route path="/ContactUs" element={<ContactUs />} />
           <Route
             path="/Login"
-            element={<Login csrfToken={csrfToken} />}
+            element={
+              isAuthenticated
+                ? <Navigate to="/" replace />
+                : <Login csrfToken={csrfToken} />
+            }
+          />
+          <Route
+            path="/Profile/:username"
+            element={
+              <ProtectedRoutes
+                isAuthenticated={isAuthenticated}
+                element={Profile}
+              />
+            }
+          />
+          <Route
+            path="/Register"
+            element={
+              isAuthenticated
+                ? <Navigate to="/" replace />
+                : <Register csrfToken={csrfToken} />
+            }
           />
           <Route
             path="/admin/dashboard"

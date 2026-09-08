@@ -5,7 +5,7 @@ import { AuthContext } from '../../AuthContext';
 import {useContext} from "react";
 
 const NavBar = () => {
-  const { isAuthenticated, isAdmin } = useContext(AuthContext);
+  const { isAuthenticated, isAdmin, username } = useContext(AuthContext);
 return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
       <div className="container-fluid">
@@ -22,9 +22,22 @@ return (
               <Link className="nav-link" to="/">Home</Link>
             </li>
             {!isAuthenticated && (
-            <li className="nav-item">
-              <Link className="nav-link" to="/Login">Login</Link>
-            </li>
+              <>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/Login">Login</Link>
+                </li>
+
+                <li className="nav-item">
+                  <Link className="nav-link" to="/Register">Register</Link>
+                </li>
+              </>
+            )}
+            {isAuthenticated && (
+              <li className="nav-item">
+                <Link className="nav-link" to={`/Profile/${username}`}>
+                  Profile
+                </Link>
+              </li>
             )}
             {isAuthenticated && isAdmin && (
             <li className="nav-item">

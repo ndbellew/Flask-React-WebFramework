@@ -8,6 +8,7 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [username, setUsername] = useState('');
 
   useEffect(() => {
     const validateToken = async () => {
@@ -23,11 +24,14 @@ export const AuthProvider = ({ children }) => {
 
         if (response && response.ok) {
           const data = await response.json();
+
           setIsAuthenticated(true);
           setIsAdmin(data.role === 'admin');
+          setUsername(data.username);
         } else {
           setIsAuthenticated(false);
           setIsAdmin(false);
+          setUsername('');
         }
       }
     };
@@ -36,7 +40,12 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, isAdmin }}>
+    <AuthContext.Provider value={{
+      isAuthenticated,
+      isAdmin,
+      username
+    }}
+    >
       {children}
     </AuthContext.Provider>
   );
