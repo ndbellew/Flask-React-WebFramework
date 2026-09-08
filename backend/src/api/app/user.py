@@ -50,7 +50,7 @@ def get_current_user():
     ), 200
 
 
-@user_bp.get("/profile/<str:username>")
+@user_bp.get("/profile/<string:username>")
 @jwt_required()
 def get_profile(username: str):
     user = db.session.execute(
