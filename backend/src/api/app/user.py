@@ -1,16 +1,15 @@
 from flask import Blueprint, jsonify
 from flask_jwt_extended import (
-    get_jwt,
     create_access_token,
     create_refresh_token,
+    get_jwt,
     get_jwt_identity,
     jwt_required,
 )
 
 from ..decorators.require_json import require_json
-from ..extensions import db
+from ..extensions import csrf, db
 from ..models import RevokedToken, User
-from ..extensions import csrf
 
 user_bp = Blueprint("user", __name__)
 
@@ -33,6 +32,7 @@ def validate_token():
         role=claims["role"],
         username=user.username,
     )
+
 
 @user_bp.get("/me")
 @jwt_required()

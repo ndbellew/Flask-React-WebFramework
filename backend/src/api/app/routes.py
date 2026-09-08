@@ -7,8 +7,6 @@ from flask_jwt_extended import (
 )
 from flask_wtf.csrf import generate_csrf
 
-
-
 api_bp = Blueprint("api", __name__)
 
 ## Probably Don't Need
@@ -34,6 +32,3 @@ def protected():
 def get_csrf_token():
     token = generate_csrf()
     return jsonify(csrf_token=token)
-
-
-
