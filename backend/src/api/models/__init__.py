@@ -1,3 +1,4 @@
-from api.models.user import User
+from ..models.tokens import RevokedToken
+from ..models.user import User
 
-__all__ = ["User"]
+__all__ = ["RevokedToken", "User"]
