@@ -70,11 +70,11 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      - name: Format
+        run: npm run format:check
+
       - name: Run tests with coverage
         run: npm run test:coverage
-
-      - name: Run tests
-        run: npm run test -- --reporter=verbose
 
       - name: Build
         run: npm run build

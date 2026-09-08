@@ -10,15 +10,12 @@ const Profile = () => {
 
   useEffect(() => {
     const fetchProfile = async () => {
-      const response = await fetchWithTokenRefresh(
-        `/profile/${username}`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
+      const response = await fetchWithTokenRefresh(`/profile/${username}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
-      );
+      });
 
       const data = await response.json();
 
